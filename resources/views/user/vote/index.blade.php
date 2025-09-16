@@ -14,10 +14,18 @@
     @endif
     @if(session('error'))
     <p style="color:red">{{ session('error') }}</p>
+    <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+        @csrf
+        <button type="submit">Logout</button>
+    </form>
     @endif
 
     @if($userVote)
     <p>Anda sudah memilih kandidat: <strong>{{ $userVote->candidate->leader_name }} &amp; {{ $userVote->candidate->coleader_name }}</strong></p>
+    <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+        @csrf
+        <button type="submit">Logout</button>
+    </form>
     @else
     <form action="{{ route('user.vote.store') }}" method="post">
         @csrf
@@ -32,10 +40,7 @@
         @endforeach
     </form>
     @endif
-    <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-        @csrf
-        <button type="submit">Logout</button>
-    </form>
+
 </body>
 
 </html>

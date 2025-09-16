@@ -60,6 +60,12 @@
         </label>
         <button type="submit">Tambah User</button>
     </form>
+    <form action="{{ route('users.import') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <label for="file">Import user</label>
+        <input type="file" name="file" placeholder="xlsx,xls,csv" required>
+        <button type="submit">Import</button>
+    </form>
     <br>
     <h2>Buat Token untuk User</h2>
     <form action="{{ route('users.token') }}" method="POST">

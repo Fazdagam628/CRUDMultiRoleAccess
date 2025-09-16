@@ -16,6 +16,19 @@ class VoteController extends Controller
         return view('user.vote.index', compact('candidate', 'userVote'));
     }
 
+    public function getData()
+    {
+        // Ambil semua kandidat dan hitung jumlah vote masing-masing
+        $candidates = Candidate::withCount('votes')->get();
+
+        $labels = $candidates->pluck('no_urut');
+        $data = $candidates->pluck('votes_count');
+
+        return response()->json([
+            'labels' => $labels->toArray(),
+            'data' => $data->toArray()
+        ]);
+    }
     public function store(Request $request)
     {
         $request->validate([
@@ -51,8 +64,9 @@ class VoteController extends Controller
     }
     public function results()
     {
-        $results = Candidate::withCount('votes')->orderBy('no_urut')->get();
-        return view('admin.votes.results', compact('results'));
+        // $results = Candidate::withCount('votes')->orderBy('no_urut')->get();
+        // return view('admin.votes.results', compact('results'));
+        return view('admin.votes.results');
     }
 
     public function reset(Request $request)
