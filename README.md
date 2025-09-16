@@ -1,66 +1,217 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CRUD Multi Role Access
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📌 Deskripsi Proyek
 
-## About Laravel
+CRUD Multi Role Access adalah sebuah aplikasi berbasis Laravel yang mengimplementasikan sistem autentikasi dan otorisasi dengan **multi-role login**. Aplikasi ini mendukung role **Admin** dan **User** dengan hak akses berbeda, serta memiliki fitur CRUD (Create, Read, Update, Delete) dengan validasi, middleware, dan pengelolaan token untuk voting.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* **Autentikasi Multi-Role** (Admin & User)
+* **CRUD User & Kandidat**
+* **Voting System** dengan token
+* **Middleware Role-based Access**
+* **Soft delete & Restore data**
+* **Statistik hasil voting**
+* **Proteksi Token** agar hanya bisa digunakan sekali
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📂 Struktur Proyek
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Struktur utama proyek Laravel ini:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+CRUDMultiRoleAccess/
+│
+├── app/
+│   ├── Console/        # Perintah artisan kustom
+│   ├── Exceptions/     # Handler error aplikasi
+│   ├── Http/
+│   │   ├── Controllers/  # Controller utama aplikasi
+│   │   │   ├── Auth/         # Controller autentikasi
+│   │   │   ├── CandidateController.php # CRUD kandidat
+│   │   │   ├── PostController.php      # CRUD postingan (contoh)
+│   │   │   ├── TokenController.php     # Manajemen token voting
+│   │   │   ├── UserController.php      # CRUD user
+│   │   │   └── VoteController.php      # Proses voting & hasil
+│   │   ├── Middleware/   # Middleware kustom (Role, Token, dll)
+│   │   │   ├── EnsureTokenIsVerified.php
+│   │   │   ├── RoleMiddleware.php
+│   │   │   └── Authenticate.php
+│   │   └── Kernel.php   # Registrasi middleware
+│   │
+│   ├── Models/         # Model database (Eloquent ORM)
+│   │   ├── Candidate.php
+│   │   ├── Token.php
+│   │   ├── User.php
+│   │   └── Vote.php
+│   │
+│   └── Providers/      # Service providers
+│
+├── bootstrap/          # Bootstrap Laravel
+├── config/             # Konfigurasi aplikasi (auth.php, database.php, dll)
+├── database/
+│   ├── factories/      # Factory untuk seeding
+│   ├── migrations/     # Migrasi database
+│   └── seeders/        # Data awal
+│
+├── public/             # Root folder web (index.php, asset)
+├── resources/
+│   ├── views/          # Blade templates (auth, dashboard, vote, dll)
+│   ├── js/             # JavaScript frontend
+│   └── css/            # File CSS
+│
+├── routes/
+│   ├── web.php         # Routing utama aplikasi (auth, admin, user)
+│   └── api.php         # Jika ada API tambahan
+│
+├── storage/            # Cache, logs, upload, dll
+├── tests/              # Unit test & feature test
+├── vendor/             # Dependensi Composer
+│
+├── .env                # Konfigurasi environment (DB, APP_KEY, dll)
+├── artisan             # CLI Laravel
+├── composer.json       # Dependensi Laravel
+└── package.json        # Jika ada dependensi frontend
+```
 
-## Laravel Sponsors
+### 🔑 Penjelasan Struktur Penting
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+* **app/Http/Controllers/** → berisi logika utama aplikasi (CRUD, autentikasi, voting).
+* **app/Http/Middleware/** → pengecekan role dan token sebelum request diproses.
+* **app/Models/** → representasi tabel database.
+* **resources/views/** → UI berbasis Blade (login, dashboard admin, voting user).
+* **routes/web.php** → mendefinisikan route utama (admin & user).
+* **database/migrations/** → mendefinisikan struktur tabel database.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## 📜 Routing Utama
 
-## Contributing
+```php
+Route::redirect('/', '/login');
+Route::get('login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::resource('users', UserController::class);
+    Route::resource('candidates', CandidateController::class);
+    Route::resource('tokens', TokenController::class);
+});
 
-## Code of Conduct
+Route::middleware(['auth', 'role:user', 'token.verify'])->group(function () {
+    Route::get('/vote', [VoteController::class, 'index'])->name('vote.index');
+    Route::post('/vote', [VoteController::class, 'store'])->name('vote.store');
+    Route::get('/results', [VoteController::class, 'results'])->name('vote.results');
+});
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🔧 Kode Penting
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### VoteController (store method)
 
-## License
+```php
+public function store(Request $request)
+{
+    $request->validate([
+        'candidate_id' => 'required|exists:candidates,id'
+    ]);
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    // Cek apakah user sudah pernah vote
+    $existingVote = Vote::where('user_id', auth()->id())->first();
+
+    if ($existingVote) {
+        return redirect()->back()->with('error', 'Anda sudah pernah memberikan suara.');
+    }
+
+    // Simpan vote
+    Vote::create([
+        'user_id' => auth()->id(),
+        'candidate_id' => $request->candidate_id
+    ]);
+
+    return redirect()->back()->with('success', 'Voting berhasil!');
+}
+```
+
+Kode di atas mengecek apakah user sudah pernah voting. Jika sudah, voting ditolak. Jika belum, data baru disimpan ke tabel **votes**.
+
+---
+
+## 🔌 Contoh API Endpoint
+
+### Login
+
+**POST** `/login`
+
+```json
+{
+  "email": "admin@mail.com",
+  "password": "password"
+}
+```
+
+**Response**
+
+```json
+{
+  "message": "Login berhasil",
+  "redirect": "/admin/dashboard"
+}
+```
+
+### Vote
+
+**POST** `/vote`
+
+```json
+{
+  "candidate_id": 2
+}
+```
+
+**Response**
+
+```json
+{
+  "message": "Voting berhasil!"
+}
+```
+
+---
+
+## 🗄️ ERD (Entity Relationship Diagram)
+
+```
+Users (id, name, email, password, role)
+Candidates (id, name, visi, misi)
+Votes (id, user_id, candidate_id, created_at)
+Tokens (id, token, user_id, expires_at, used_at)
+```
+
+**Relasi:**
+
+* **User → Vote**: One-to-One (user hanya bisa vote sekali)
+* **Candidate → Vote**: One-to-Many (satu kandidat bisa dipilih banyak user)
+* **User → Token**: One-to-One (satu user punya satu token)
+
+---
+
+## 📊 Statistik
+
+Admin dapat melihat hasil voting berupa jumlah suara tiap kandidat, ditampilkan di dashboard.
+
+---
+
+## 🔮 Pengembangan Selanjutnya
+
+* Tambah **import data user dari excel** ke Excel/PDF
+* Tambah **chart hasil voting** dengan Chart.js
+* Implementasi **Notifikasi real-time** dengan Pusher/WebSocket
+* Tambah **uji unit & feature test**
