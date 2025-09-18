@@ -34,7 +34,7 @@
                 responsive: true,
                 plugins: {
                     legend: {
-                        display: false
+                        display: true
                     },
                     title: {
                         display: true,
