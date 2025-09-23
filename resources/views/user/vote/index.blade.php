@@ -19,7 +19,10 @@
         <button type="submit">Logout</button>
     </form>
     @endif
-
+    {{-- Tampilkan waktu kadaluarsa sesi untuk user (hanya non-admin) --}}
+    @if(isset($user) && !$user->is_admin)
+    <p>Waktu sesi berakhir <strong>{{ $user->expires_at ? $user->expires_at->format('d M Y H:i:s') : 'Tidak ada (expired)' }}</strong></p>
+    @endif
     @if($userVote)
     <p>Anda sudah memilih kandidat: <strong>{{ $userVote->candidate->leader_name }} &amp; {{ $userVote->candidate->coleader_name }}</strong></p>
     <form action="{{ route('logout') }}" method="POST" style="display:inline;">

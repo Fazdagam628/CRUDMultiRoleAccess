@@ -16,17 +16,25 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
+        // $verified = $request->session()->get('is_token_verified', false);
+        // $loginId  = $request->session()->get('verified_token_id',null);
         if (!Auth::check()) {
             return redirect()->route('login');
         }
         $user = Auth::user();
 
-        // If Role Admin
         if ($role === 'admin' && $user->is_admin) {
             return $next($request);
         }
-        // If Role User
+
         if ($role === 'user' && !$user->is_admin) {
+            // blokir jika used_at atau session expired
+            if ($user->used_at || $user->sessionExpired()) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('login')->with('error', 'Sesi Anda berakhir atau akun sudah dipakai.');
+            }
             return $next($request);
         }
 

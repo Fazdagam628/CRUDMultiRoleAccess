@@ -40,15 +40,19 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // User
 Route::middleware(['auth', 'role:user'])->group(function () {
     // halaman verifikasi token
-    Route::get('/user/token', fn() => view('user.token'))->name('user.token');
-    Route::post('/user/token/submit', [AuthController::class, 'token'])->name('user.token.submit');
+    // Route::get('/user/token', fn() => view('user.token'))->name('user.token');
+    // Route::post('/user/token/submit', [AuthController::class, 'token'])->name('user.token.submit');
+    Route::get('/user/dashboard', fn() => view('user.dashboard'))->name('user.dashboard');
+    Route::post('/user/dashboard/used', [TokenController::class, 'markAsUsed'])->name('user.dashboard.used');
+    Route::get('/user/vote', [VoteController::class, 'index'])->name('user.vote.index');
+    Route::post('/user/vote', [VoteController::class, 'store'])->name('user.vote.store');
 
     // semua route user selain /user/token harus lewat token.verified
     Route::middleware(['token.verified'])->group(function () {
-        Route::get('/user/dashboard', fn() => view('user.dashboard'))->name('user.dashboard');
-        Route::post('/user/dashboard/used', [TokenController::class, 'markAsUsed'])->name('user.dashboard.used');
-        Route::get('/user/vote', [VoteController::class, 'index'])->name('user.vote.index');
-        Route::post('/user/vote', [VoteController::class, 'store'])->name('user.vote.store');
+        // Route::get('/user/dashboard', fn() => view('user.dashboard'))->name('user.dashboard');
+        // Route::post('/user/dashboard/used', [TokenController::class, 'markAsUsed'])->name('user.dashboard.used');
+        // Route::get('/user/vote', [VoteController::class, 'index'])->name('user.vote.index');
+        // Route::post('/user/vote', [VoteController::class, 'store'])->name('user.vote.store');
         // contoh: kalau user punya post sendiri
         // Route::resource('/user/posts', \App\Http\Controllers\PostController::class);
     });

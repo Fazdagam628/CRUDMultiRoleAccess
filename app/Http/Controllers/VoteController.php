@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vote;
+use App\Models\Token;
 use App\Models\Candidate;
 use Illuminate\Http\Request;
-use App\Models\Token;
+use Illuminate\Support\Facades\Auth;
 
 class VoteController extends Controller
 {
@@ -13,7 +14,8 @@ class VoteController extends Controller
     {
         $candidate = Candidate::all();
         $userVote = Vote::where('user_id', auth()->id())->first();
-        return view('user.vote.index', compact('candidate', 'userVote'));
+        $user = Auth::user();
+        return view('user.vote.index', compact('candidate', 'userVote', 'user'));
     }
 
     public function getData()
@@ -34,8 +36,8 @@ class VoteController extends Controller
         $request->validate([
             'candidate_id' => 'required|exists:candidates,id'
         ]);
-        $tokenId = $request->session()->get('verified_token_id');
-        $token = Token::find($tokenId);
+        // $tokenId = $request->session()->get('verified_token_id');
+        // $token = Token::find($tokenId);
         // Cek apakah user sudah pernah vote
         $existingVote = Vote::where('user_id', auth()->id())->first();
 
@@ -59,8 +61,19 @@ class VoteController extends Controller
         //     }
         //     return redirect()->back()->with('success', 'Voting berhasil!');
         // }
-        return redirect()->back()->with('success', 'Voting berhasil!');
+        // return redirect()->back()->with('success', 'Voting berhasil!');
         // return redirect()->back()->with('error', 'Voting error!');
+
+        // Tandai user sudah terpakai (used_at) → tidak bisa login lagi
+        $user = Auth::user();
+        $user->markSessionUsed();
+
+        // logout user setelah voting sukses
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login')->with('success', 'Voting berhasil! Akun Anda sekarang tidak bisa digunakan lagi.');
     }
     public function results()
     {
