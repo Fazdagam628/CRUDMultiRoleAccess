@@ -107,7 +107,7 @@
         });
 
         function copyToken() {
-            var token = document.getElementById("tokenText").innerText;
+            let token = document.getElementById("tokenText").innerText;
             navigator.clipboard.writeText(token).then(function() {
                 alert("Token berhasil disalin: " + token);
             }, function() {
