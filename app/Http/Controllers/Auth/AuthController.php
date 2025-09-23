@@ -16,6 +16,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
+            /* The line `'email' => 'required|email',` is a validation rule for the email input field
+            in the login form. */
             'name' => 'required|string',
             // 'email' => 'required|email',
             'password' => 'required'
