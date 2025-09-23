@@ -35,11 +35,11 @@ class EnsureTokenIsVerified
         //         }
         // 
         //         return $next($request);
-        if (!Auth::check()) {
+        $user = Auth::user();
+        if (!$user->check()) {
             return redirect()->route('login');
         }
 
-        $user = Auth::user();
 
         // Admin bypass
         if ($user->is_admin) {
