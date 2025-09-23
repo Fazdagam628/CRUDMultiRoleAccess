@@ -27,11 +27,11 @@
         <li>No users found.</li>
         @else
         <li>{{ $user->name }} ({{ $user->email }})</li>
-        <form action="{{ route('admin.vote.reset') }}" method="post" style="display:inline;">
+        <form action="{{ route('admin.user.reset') }}" method="post" style="display:inline;">
             @csrf
             @method('POST')
             <input type="hidden" name="user_id" value="{{ $user->id }}">
-            <button type="submit" onclick="return confirm('Yakin Reset?')">Reset Vote</button>
+            <button type="submit" onclick="return confirm('Yakin Reset?')">Reset Akun</button>
         </form>
         @endif
         @endforeach

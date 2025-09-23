@@ -27,7 +27,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/votes/results/data', [VoteController::class, 'getData'])->name('admin.votes.getData');
     Route::post('/admin/users', [UserController::class, 'store'])->name('users.store');
     Route::post('/admin/import', [UserController::class, 'import'])->name('users.import');
-    Route::post('/admin/vote/reset', [VoteController::class, 'reset'])->name('admin.vote.reset');
+    Route::post('/admin/user/reset', [UserController::class, 'resetAccount'])->name('admin.user.reset');
     Route::post('/admin/vote/reset-all', [VoteController::class, 'resetAll'])->name('admin.vote.resetAll');
     Route::post('/admin/tokens', [TokenController::class, 'store'])->name('users.token');
     Route::get('/admin/candidates', [CandidateController::class, 'index'])->name('admin.candidates.index');

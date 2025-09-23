@@ -36,6 +36,26 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Data berhasil diimport!');
     }
 
+    public function resetAccount(Request $request){
+        $request->validate([
+            'user_id' => 'required|exists:users,id'
+        ]);
+
+        $user = User::find($request->user_id);
+        if ($user) {
+            // Hapus vote terkait user
+            Vote::where('user_id', $user->id)->delete();
+            // Reset used_at dan session
+            $user->used_at = null;
+            $user->expires_at = null;
+            $user->save();
+
+            return redirect()->back()->with('success', 'Akun ' . $user->name . ' berhasil direset.');
+        }
+
+        return redirect()->back()->with('error', 'Akun tidak ditemukan.');
+    }
+
 
     public function store(Request $request)
     {
