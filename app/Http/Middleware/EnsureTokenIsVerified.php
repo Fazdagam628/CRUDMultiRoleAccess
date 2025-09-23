@@ -48,7 +48,7 @@ class EnsureTokenIsVerified
 
         // Jika user sudah dipakai untuk vote → logout dan blokir
         if ($user->used_at) {
-            Auth::logout();
+            $user->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
             return redirect()->route('login')->with('error', 'Akun sudah dipakai untuk voting.');
@@ -56,7 +56,7 @@ class EnsureTokenIsVerified
 
         // Jika session/expiry tidak valid atau sudah lewat → logout paksa
         if ($user->sessionExpired()) {
-            Auth::logout();
+            $user->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
             return redirect()->route('login')->with('error', 'Sesi Anda berakhir, silakan login ulang.');
