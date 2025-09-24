@@ -38,13 +38,17 @@ class AuthController extends Controller
                 Auth::logout();
                 return redirect()->route('login')->with('error', 'Akun telah dipakai untuk voting dan tidak bisa login lagi.');
             }
+            if ($user->expires_at) {
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'Akun telah melewati masa kadaluarsa dan tidak bisa login lagi.');
+            }
 
             // Set session/expiry pada user (durasi dari env USER_SESSION_MINUTES)
             $minutes = (int) env('USER_SESSION_MINUTES', 5);
             $user->startSession($minutes);
             //             // reset flag token saat login
             //             $request->session()->forget('is_token_verified');
-            // 
+            //
             //             return Auth::user()->is_admin
             //                 ? redirect()->route('admin.dashboard')
             //                 : redirect()->route('user.vote.index');
@@ -63,12 +67,12 @@ class AuthController extends Controller
         //             'token' => 'required'
         //         ]);
         //         $user = Auth::user();
-        // 
+        //
         //         // cek token di tabel tokens
         //         $validToken = Token::where('user_id', $user->id)
         //             ->where('token', $credentials['token'])
         //             ->first();
-        // 
+        //
         //         if ($validToken && $validToken->isValid()) {
         //             // tandai sudah dipakai (hangus)
         //             // $validToken->markAsUsed();
@@ -78,7 +82,7 @@ class AuthController extends Controller
         //             // simpan flag token_verified di session
         //             $request->session()->put('is_token_verified', true);
         //             $request->session()->put('verified_token_id', $validToken->id);
-        // 
+        //
         //             // return redirect()->route('user.dashboard');
         //             return redirect()->route('user.vote.index');
         //         }
