@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
+use App\Models\Token;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Token;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -20,13 +21,18 @@ class AuthController extends Controller
             in the login form. */
             'name' => 'required|string',
             // 'email' => 'required|email',
-            'password' => 'required'
+            'token' => 'required'
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+        $user = User::where('name', $credentials['name'])
+            // ->where('email', $credentials['email'])
+            ->where('token', $credentials['token'])
+            ->first();
 
-            $user = Auth::user();
+        if ($user) {
+            // Login manual
+            Auth::login($user);
+            $request->session()->regenerate();
 
             // Admin login normal
             if ($user->is_admin) {
@@ -57,7 +63,41 @@ class AuthController extends Controller
             return redirect()->route('user.vote.index');
         }
 
-        return redirect()->route('login')->with('error', 'Email atau password salah.');
+        //         if (Auth::attempt($credentials)) {
+        //             $request->session()->regenerate();
+        //
+        //             $user = Auth::user();
+        //
+        //             // Admin login normal
+        //             if ($user->is_admin) {
+        //                 return redirect()->route('admin.dashboard');
+        //             }
+        //
+        //             // Users: cek apakah akun sudah pernah dipakai (used_at)
+        //             if ($user->used_at) {
+        //                 Auth::logout();
+        //                 return redirect()->route('login')->with('error', 'Akun telah dipakai untuk voting dan tidak bisa login lagi.');
+        //             }
+        //             if ($user->expires_at) {
+        //                 Auth::logout();
+        //                 return redirect()->route('login')->with('error', 'Akun telah melewati masa kadaluarsa dan tidak bisa login lagi.');
+        //             }
+        //
+        //             // Set session/expiry pada user (durasi dari env USER_SESSION_MINUTES)
+        //             $minutes = (int) env('USER_SESSION_MINUTES', 5);
+        //             $user->startSession($minutes);
+        //             //             // reset flag token saat login
+        //             //             $request->session()->forget('is_token_verified');
+        //             //
+        //             //             return Auth::user()->is_admin
+        //             //                 ? redirect()->route('admin.dashboard')
+        //             //                 : redirect()->route('user.vote.index');
+        //
+        //             // redirect ke halaman voting
+        //             return redirect()->route('user.vote.index');
+        //         }
+
+        return redirect()->route('login')->with('error', 'Nama atau Token salah.');
     }
 
 

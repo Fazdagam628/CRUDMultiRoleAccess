@@ -18,9 +18,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
         'is_admin',
-        'password',
+        'token',
         'expires_at',
         'used_at',
     ];
@@ -30,10 +29,10 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    // protected $hidden = [
+    //     'password',
+    //     'remember_token',
+    // ];
     protected $casts = [
         'is_admin'   => 'boolean',
         'expires_at' => 'datetime',
@@ -45,13 +44,13 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    // protected function casts(): array
+    // {
+    //     return [
+    //         'email_verified_at' => 'datetime',
+    //         'password' => 'hashed',
+    //     ];
+    // }
     // apakah session (login) user masih berlaku
     public function sessionValid(): bool
     {

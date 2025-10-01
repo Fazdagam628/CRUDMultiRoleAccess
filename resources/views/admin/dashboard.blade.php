@@ -26,7 +26,7 @@
         @if ($users->isEmpty())
         <li>No users found.</li>
         @else
-        <li>{{ $user->name }} ({{ $user->email }})</li>
+        <li>{{ $user->name }} ({{ $user->token }})</li>
         <form action="{{ route('admin.user.reset') }}" method="post" style="display:inline;">
             @csrf
             @method('POST')
@@ -53,8 +53,7 @@
     <form action="{{ route('users.store') }}" method="POST">
         @csrf
         <input type="text" name="name" placeholder="Nama" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <input type="text" name="token" placeholder="Token" required>
         <label>
             <input type="checkbox" name="is_admin"> Admin?
         </label>
@@ -67,7 +66,7 @@
         <button type="submit">Import</button>
     </form>
     <br>
-    <h2>Buat Token untuk User</h2>
+    <!-- <h2>Buat Token untuk User</h2>
     <form action="{{ route('users.token') }}" method="POST">
         @csrf
         <label for="user_id">Pilih User</label>
@@ -90,7 +89,7 @@
         <span id="tokenText">{{ session('new_token') }}</span>
         <button type="button" onclick="copyToken()">Copy</button>
     </div>
-    @endif
+    @endif -->
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

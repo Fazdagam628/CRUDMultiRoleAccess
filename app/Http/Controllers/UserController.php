@@ -36,7 +36,8 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Data berhasil diimport!');
     }
 
-    public function resetAccount(Request $request){
+    public function resetAccount(Request $request)
+    {
         $request->validate([
             'user_id' => 'required|exists:users,id'
         ]);
@@ -61,15 +62,19 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6'
+            // 'email' => 'required|email|unique:users,email',
+            // 'password' => 'required|string|min:6'
+            'token' => 'required|string|max:255',
         ]);
 
         User::create([
             'name' => $request->name,
-            'email' => $request->email,
+            // 'email' => $request->email,
             'is_admin' => isset($request->is_admin),
-            'password' => Hash::make($request->password),
+            // 'password' => Hash::make($request->password),
+            'token' => $request->token,
         ]);
+
+        return redirect()->back()->with('success', 'User berhasil ditambahkan!');
     }
 }
